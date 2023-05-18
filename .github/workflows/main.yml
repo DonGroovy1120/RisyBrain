@@ -1,0 +1,70 @@
+name: CI/CD
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  
+env:
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  FIREBASE_SERVICE_ACCOUNT_TEST3_83FFC: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEST3_83FFC }}
+  REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
+  PINECONE_ENV: ${{ secrets.PINECONE_ENV }}
+  PINECONE_KEY: ${{ secrets.PINECONE_KEY }}
+  GITHUB_TOKEN: ${{ github.token }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+      - name: setup
+        uses: actions/setup-python@v3
+      - name: install
+        run: pip install -r requirements.txt
+      - name: embed app document 
+        run: python src/langchain/csv_embed.py
+      - name: test
+        run: python -m pytest
+      - name: api test with saucectl
+        uses: saucelabs/saucectl-run-action@v3
+        with:
+          # Sauce Labs Credentials.
+          sauce-username: ${{ secrets.SAUCE_USERNAME }}
+          sauce-access-key: ${{ secrets.SAUCE_ACCESS_KEY }}
+  deploy-development:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/development'
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: deploy development
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: smartphone
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+  deploy-staging:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/staging'
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: deploy staging
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: chatgptphone-staging
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+  deploy-production:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: deploy production
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: chatgptphone
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
