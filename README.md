@@ -1,7 +1,8 @@
 # RisingBrain
 
 The goal of this project is to develop a phone operating system that replaces the traditional UI of an Android-based smartphone with ChatGPT. The AI will manage control of all apps via plugins, which can be prompted by the user.
-
+[![CI/CD](https://github.com/ttt246/RisingBrain/actions/workflows/main.yml/badge.svg)](https://github.com/ttt246/RisingBrain/actions/workflows/main.yml)
+[![CI/CD Develop](https://github.com/ttt246/RisingBrain/actions/workflows/main.yml/badge.svg?branch=develop)](https://github.com/ttt246/RisingBrain/actions/workflows/main.yml)
 ## 1. Description
 
 #### 1.1 Achievement
