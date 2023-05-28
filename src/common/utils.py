@@ -25,6 +25,12 @@ PINECONE_INDEX_NAME = "risinglangchain-index"
 # open ai
 GPT_MODEL = "gpt-3.5-turbo"
 
+# AI Agent name
+AGENT_NAME = "RisingBrain Assistant"
+
+# indexes of relatedness of embedding
+COMMAND_SMS_INDEXS = [4, 5]
+
 
 def get_firebase_cred():
     if os.path.exists("firebase_cred.json"):

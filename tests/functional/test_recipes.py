@@ -1,6 +1,6 @@
 import re
 
-from src.langchain.chatbot import getCompletion, getTextFromImage
+from src.langchain.risingplugin import getCompletion, getTextFromImage
 from src.firebase.cloudmessage import send_message
 from src.firebase.cloudmessage import get_tokens
 from src.langchain.image_embedding import query_image_text

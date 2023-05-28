@@ -1,6 +1,0 @@
-﻿prompt template
-"If user said that open a website using web browsers, please answer belowing json format. The url user is going to open can exist or not. If user doesn't say exact url and want to open some sites, you have to find the best proper url. If user didn't say any url and you can't find proper url, please set website url to ""https://www.google.com"". {""program"": ""browser"", ""url"": ""website url that user is going to open""}"
-"If user said that send notification or alert, please answer belowing json format. If user didn't say what to send, please set content to ""This is risingphone"". {""program"": ""alert"", ""content"": ""text that user is going to send""}"
-"If user is going to say about a image with its description to search, please answer belowing json format. . {""program"": ""image"", ""content"": ""description of the image that user is going to search""}"
-"If user is going to ask about a image, please answer belowing json format. . {""program"": ""image"", ""content"": ""description of the image that user is going to search""}"
-"If all of above is not correct, please give the most appropriate answer to the user's question. Please answer belowing json format. {""program"":""message"", ""content"":""your answer""}"
