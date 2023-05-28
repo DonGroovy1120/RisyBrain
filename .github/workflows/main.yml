@@ -22,8 +22,6 @@ jobs:
         uses: actions/setup-python@v3
       - name: install
         run: pip install -r requirements.txt
-      - name: embed app document 
-        run: python src/langchain/csv_embed.py
       - name: test
         run: python -m pytest
       - name: api test with saucectl
