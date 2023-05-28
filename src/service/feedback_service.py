@@ -3,8 +3,9 @@ from os import remove
 from firebase_admin import firestore
 
 
-# service to manage feedback collection
 from src.model.feedback_model import FeedbackModel
+
+"""service to manage feedback collection"""
 
 
 class FeedbackService:
@@ -12,11 +13,13 @@ class FeedbackService:
         self.db = firestore.client()
         self.feedbacks_ref = self.db.collection("feedbacks")
 
-    # add a new feedback
+    """add a new feedback"""
+
     def add(self, feedback: FeedbackModel):
         return self.feedbacks_ref.document().set(feedback.to_json())
 
-    # get list of feedback
+    """get list of feedback"""
+
     def get(self, search, rating):
         if rating == 0:
             query = self.feedbacks_ref.where("rating", "!=", rating)

@@ -4,13 +4,20 @@ import os
 from flask import Blueprint, request, jsonify, send_from_directory
 
 from src.common.assembler import Assembler
-from src.langchain.chatbot import getCompletion, getTextFromImage, query_image_ask
+from rising_plugin.risingplugin import (
+    getCompletion,
+    getTextFromImage,
+    query_image_ask,
+    handle_chat_completion,
+)
 from src.firebase.cloudmessage import send_message, get_tokens
-from src.langchain.csv_embed import csv_embed
-from src.langchain.image_embedding import embed_image_text, query_image_text
+from rising_plugin.csv_embed import csv_embed
+from rising_plugin.image_embedding import embed_image_text, query_image_text
 from src.model.basic_model import BasicModel
 from src.model.feedback_model import FeedbackModel
+from src.service.command_service import CommandService
 from src.service.feedback_service import FeedbackService
+from src.service.llm.chat_service import ChatService
 
 
 def construct_blueprint_api(generator):
@@ -21,6 +28,7 @@ def construct_blueprint_api(generator):
 
     # Service
     feedback_service = FeedbackService()
+    command_service = CommandService()
 
     @generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
@@ -35,7 +43,7 @@ def construct_blueprint_api(generator):
         token = data["token"]
         uuid = data["uuid"]
 
-        result = getCompletion(query, uuid)
+        result = getCompletion(query=query, uuid=uuid)
 
         notification = {"title": "alert", "content": result}
 
@@ -175,5 +183,71 @@ def construct_blueprint_api(generator):
     def get_feedback(search, rating):
         result = feedback_service.get(search, rating)
         return assembler.to_response(200, "added successfully", json.dumps(result))
+
+    @generator.response(
+        status_code=200, schema={"message": "message", "result": "test_result"}
+    )
+    @api.route("/commands")
+    def get_commands():
+        result = command_service.get()
+        return assembler.to_response(
+            200,
+            "success",
+            json.dumps({"program": "help_command", "content": json.dumps(result)}),
+        )
+
+    @generator.request_body(
+        {
+            "token": "test_token",
+            "uuid": "test_uuid",
+            "history": [{"role": "user", "content": "test_message"}],
+            "user_input": "user_message",
+            "model": "gpt-3.5-turbo",
+        }
+    )
+    @generator.response(
+        status_code=200,
+        schema={
+            "message": "message",
+            "result": {
+                "program": "agent",
+                "message": {"role": "assistant", "content": "content"},
+            },
+        },
+    )
+    @api.route("/chat_rising", methods=["POST"])
+    def message_agent():
+        try:
+            data = json.loads(request.get_data())
+            token = data["token"]
+            uuid = data["uuid"]
+            histories = assembler.to_array_message_model(data["history"])  # json array
+            user_input = data["user_input"]
+            model = data["model"]
+            """init chat service with model"""
+            chat_service = ChatService(ai_name=uuid, llm_model=model)
+            # getting chat response from rising ai
+            assistant_reply = chat_service.chat_with_ai(
+                prompt="",
+                user_input=user_input,
+                full_message_history=histories,
+                permanent_memory=None,
+            )
+        except Exception as e:
+            return assembler.to_response(
+                400, json.dumps(e.__getattribute__("error")), ""
+            )
+        return assembler.to_response(
+            200,
+            "added successfully",
+            json.dumps(
+                {
+                    "program": "agent",
+                    "message": json.dumps(
+                        assistant_reply.get_one_message_item().to_json()
+                    ),
+                }
+            ),
+        )
 
     return api

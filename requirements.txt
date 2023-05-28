@@ -100,3 +100,4 @@ Werkzeug==2.2.3
 win32-setctime==1.1.0
 wrapt==1.15.0
 yarl==1.8.2
+rising_plugin==0.1.0

@@ -1,9 +1,9 @@
 import re
 
-from src.langchain.chatbot import getCompletion, getTextFromImage
+from rising_plugin.risingplugin import getCompletion, getTextFromImage
 from src.firebase.cloudmessage import send_message
 from src.firebase.cloudmessage import get_tokens
-from src.langchain.image_embedding import query_image_text
+from rising_plugin.image_embedding import query_image_text
 
 TEST_IAMGE_NAME = "0ddffe51-3763-48d9-ab74-2086de529217"
 TEST_UUID = "TEST_UUID"
@@ -11,7 +11,7 @@ TEST_UUID = "TEST_UUID"
 
 def test_langchain():
     error = "Error happened while analyzing your prompt. Please ask me again"
-    result = getCompletion("open three.js website", TEST_UUID)
+    result = getCompletion(query="open three.js website", uuid=TEST_UUID)
     print(result)
     assert result != error
 
