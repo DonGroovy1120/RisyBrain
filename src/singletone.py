@@ -1,8 +1,9 @@
-  """The singleton metaclass for ensuring only one instance of a class."""
+"""The singleton metaclass for ensuring only one instance of a class."""
 import abc
 
 
 class Singleton(abc.ABCMeta, type):
+
     """
     Singleton metaclass for ensuring only one instance of a class.
     """
