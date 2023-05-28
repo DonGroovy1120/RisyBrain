@@ -43,7 +43,7 @@ def construct_blueprint_api(generator):
         token = data["token"]
         uuid = data["uuid"]
 
-        result = getCompletion(query, uuid)
+        result = getCompletion(query=query, uuid=uuid)
 
         notification = {"title": "alert", "content": result}
 

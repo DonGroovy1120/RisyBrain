@@ -11,7 +11,7 @@ TEST_UUID = "TEST_UUID"
 
 def test_langchain():
     error = "Error happened while analyzing your prompt. Please ask me again"
-    result = getCompletion("open three.js website", TEST_UUID)
+    result = getCompletion(query="open three.js website", uuid=TEST_UUID)
     print(result)
     assert result != error
 

@@ -126,7 +126,9 @@ class ChatService:
 
                 # TODO: use a model defined elsewhere, so that model can contain
                 # temperature and other settings we care about
-                return ChatResponseModel(handle_chat_completion(model=model, messages=current_context))
+                return ChatResponseModel(
+                    handle_chat_completion(model=model, messages=current_context)
+                )
             except Exception as e:
                 # TODO: When we switch to langchain, this is built in
                 logger.warn("Error: ", "API Rate Limit Reached. Waiting 10 seconds...")
