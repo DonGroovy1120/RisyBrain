@@ -32,6 +32,11 @@ AGENT_NAME = "RisingBrain Assistant"
 COMMAND_SMS_INDEXS = [4, 5]
 
 
+# Twilio
+ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
+AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
+
+
 def get_firebase_cred():
     if os.path.exists("firebase_cred.json"):
         file = open("firebase_cred.json")

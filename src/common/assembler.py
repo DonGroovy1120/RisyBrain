@@ -5,6 +5,7 @@ from flask import jsonify
 
 from src.model.basic_model import BasicModel
 from src.model.message_model import MessageModel
+from src.model.sms_model import SMSModel
 
 
 class Assembler:
@@ -33,3 +34,10 @@ class Assembler:
 
     def to_message_model(self, data: Any) -> MessageModel:
         return MessageModel(data["role"], data["content"])
+
+    """mapping data to a SMSModel"""
+
+    def to_sms_model(self, data: Any) -> SMSModel:
+        sms_model = SMSModel()
+        sms_model.get_sms_model(data)
+        return sms_model

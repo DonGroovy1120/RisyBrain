@@ -30,3 +30,5 @@ suites:
       - 03 Image Relatedness
       - 04 Add Feedback
       - 05 Get Feedback
+      - 06 Get Commands
+      - 07 Rising Chat
