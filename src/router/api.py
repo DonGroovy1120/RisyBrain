@@ -18,6 +18,7 @@ from src.model.feedback_model import FeedbackModel
 from src.service.command_service import CommandService
 from src.service.feedback_service import FeedbackService
 from src.service.llm.chat_service import ChatService
+from src.service.twilio_service import TwilioService
 
 
 def construct_blueprint_api(generator):
@@ -29,6 +30,7 @@ def construct_blueprint_api(generator):
     # Service
     feedback_service = FeedbackService()
     command_service = CommandService()
+    twilio_service = TwilioService()
 
     @generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
@@ -249,5 +251,34 @@ def construct_blueprint_api(generator):
                 }
             ),
         )
+
+    @generator.request_body(
+        {
+            "token": "test_token",
+            "uuid": "test_uuid",
+            "data": {
+                "from": "+15005550006",
+                "to": "+12173748105",
+                "body": "All in the game, yo",
+            },
+        }
+    )
+    @generator.response(
+        status_code=200, schema={"message": "message", "result": "test_result"}
+    )
+    @api.route("/send_sms", methods=["POST"])
+    def send_sms():
+        try:
+            data = json.loads(request.get_data())
+            token = data["token"]
+            uuid = data["uuid"]
+
+            # parsing feedback payload
+            sms_model = assembler.to_sms_model(data["data"])
+            # send sms via twilio
+            twilio_resp = twilio_service.send_sms(sms_model)
+        except Exception as e:
+            return assembler.to_response(400, "Failed to send sms", "")
+        return assembler.to_response(200, "Sent a sms successfully", twilio_resp.sid)
 
     return api
