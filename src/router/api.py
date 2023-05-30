@@ -30,7 +30,6 @@ def construct_blueprint_api(generator):
     # Service
     feedback_service = FeedbackService()
     command_service = CommandService()
-    twilio_service = TwilioService()
 
     @generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
@@ -276,6 +275,7 @@ def construct_blueprint_api(generator):
             # parsing feedback payload
             sms_model = assembler.to_sms_model(data["data"])
             # send sms via twilio
+            twilio_service = TwilioService()
             twilio_resp = twilio_service.send_sms(sms_model)
         except Exception as e:
             return assembler.to_response(400, "Failed to send sms", "")
