@@ -4,6 +4,7 @@ from typing import Any, List
 from flask import jsonify
 
 from src.model.basic_model import BasicModel
+from src.model.contact_model import ContactModel
 from src.model.message_model import MessageModel
 from src.model.sms_model import SMSModel
 
@@ -41,3 +42,10 @@ class Assembler:
         sms_model = SMSModel()
         sms_model.get_sms_model(data)
         return sms_model
+
+    """mapping data to a ContactModel"""
+
+    def to_contact_model(self, data: Any) -> ContactModel:
+        contact_model = ContactModel()
+        contact_model.get_contact_model(data)
+        return contact_model
