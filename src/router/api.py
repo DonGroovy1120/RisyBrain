@@ -2,6 +2,7 @@ import json
 import os
 
 from flask import Blueprint, request, jsonify, send_from_directory
+from rising_plugin.common.utils import ProgramType
 
 from src.common.assembler import Assembler
 from rising_plugin.risingplugin import (
@@ -13,9 +14,12 @@ from rising_plugin.risingplugin import (
 from src.firebase.cloudmessage import send_message, get_tokens
 from rising_plugin.csv_embed import csv_embed
 from rising_plugin.image_embedding import embed_image_text, query_image_text
+
+from src.logs import logger
 from src.model.basic_model import BasicModel
 from src.model.feedback_model import FeedbackModel
 from src.service.command_service import CommandService
+from src.service.contact_service import ContactsService
 from src.service.feedback_service import FeedbackService
 from src.service.llm.chat_service import ChatService
 from src.service.twilio_service import TwilioService
@@ -30,6 +34,7 @@ def construct_blueprint_api(generator):
     # Service
     feedback_service = FeedbackService()
     command_service = CommandService()
+    contacts_service = ContactsService()
 
     @generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
@@ -45,6 +50,19 @@ def construct_blueprint_api(generator):
         uuid = data["uuid"]
 
         result = getCompletion(query=query, uuid=uuid)
+
+        # check contact querying
+        try:
+            result_json = eval(result)
+            if result_json["program"] == ProgramType.CONTACT:
+                # querying contacts to getting its expected results
+                contacts_results = contacts_service.query_contacts(
+                    uuid=uuid, search=result_json["content"]
+                )
+                result_json["content"] = str(contacts_results)
+                result = str(result_json)
+        except Exception as e:
+            logger.error(title="sendNotification", message=result)
 
         notification = {"title": "alert", "content": result}
 
@@ -280,5 +298,39 @@ def construct_blueprint_api(generator):
         except Exception as e:
             return assembler.to_response(400, "Failed to send sms", "")
         return assembler.to_response(200, "Sent a sms successfully", twilio_resp.sid)
+
+    @generator.request_body(
+        {
+            "token": "String",
+            "uuid": "String",
+            "contacts": [
+                {
+                    "contactId": "String",
+                    "displayName": "String",
+                    "phoneNumbers": ["String"],
+                    "status": "created | updated | deleted",
+                }
+            ],
+        }
+    )
+    @generator.response(
+        status_code=200, schema={"message": "message", "result": "test_result"}
+    )
+    @api.route("/train/contacts", methods=["POST"])
+    def train_contacts():
+        try:
+            data = json.loads(request.get_data())
+            token = data["token"]
+            uuid = data["uuid"]
+
+            # parsing contacts
+            contacts = []
+            for contact in data["contacts"]:
+                contacts.append(assembler.to_contact_model(contact))
+            # train contact
+            contacts_service.train(uuid, contacts)
+        except Exception as e:
+            return assembler.to_response(400, "Failed to train contacts", "")
+        return assembler.to_response(200, "Trained successfully", "")
 
     return api
