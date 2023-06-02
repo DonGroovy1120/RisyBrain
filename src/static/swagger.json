@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: Application
-  description: Generated at 30/05/2023 05:40:23. This is the swagger 
+  description: Generated at 02/06/2023 13:19:33. This is the swagger 
     ui based on the open api 3.0 specification of the Application
   version: 1.0.0 created by the flask swagger generator.
 externalDocs:
@@ -119,6 +119,16 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/send_sms_response'
+  '/train/contacts':
+    post:
+      tags:
+      - send_notification
+      operationId: 'train_contacts'
+      requestBody:
+        $ref: '#/components/requestBodies/train_contacts_request_body' 
+      responses:
+        '200':
+          $ref: '#/components/responses/train_contacts_response'
 components:
   requestBodies:
     send_notification_request_body:
@@ -163,6 +173,13 @@ components:
          application/json:
              schema:
                  $ref: '#/components/schemas/send_sms'
+    train_contacts_request_body:
+      description: None
+      required: True
+      content:
+         application/json:
+             schema:
+                 $ref: '#/components/schemas/train_contacts'
   responses:
     send_notification_response:
       description: send_notification response
@@ -218,6 +235,12 @@ components:
          application/json:
              schema:
                  $ref: '#/components/schemas/send_sms_response_schema'
+    train_contacts_response:
+      description: train_contacts response
+      content:
+         application/json:
+             schema:
+                 $ref: '#/components/schemas/train_contacts_response_schema'
   schemas:
     send_notification:
       type: object
@@ -431,3 +454,25 @@ components:
         body:
           type: string  
           example: All in the game, yo  
+    train_contacts_response_schema:
+      type: object
+      properties:
+        message:
+          type: string  
+          example: message  
+        result:
+          type: string  
+          example: test_result  
+    train_contacts:
+      type: object
+      properties:
+        token:
+          type: string  
+          example: String  
+        uuid:
+          type: string  
+          example: String  
+        contacts:
+          type: array  
+          items:
+            type: object
