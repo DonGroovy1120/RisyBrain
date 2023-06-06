@@ -30,13 +30,13 @@ jobs:
           # Sauce Labs Credentials.
           sauce-username: ${{ secrets.SAUCE_USERNAME }}
           sauce-access-key: ${{ secrets.SAUCE_ACCESS_KEY }}
-  deploy-development:
+  deploy-develop:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/development'
+    if: github.ref == 'refs/heads/develop'
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-      - name: deploy development
+      - name: deploy develop
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
