@@ -25,7 +25,7 @@ from src.service.llm.chat_service import ChatService
 from src.service.twilio_service import TwilioService
 
 
-def construct_blueprint_api(generator):
+def construct_blueprint_api():
     api = Blueprint("send_notification", __name__)
 
     # Assembler
@@ -36,12 +36,13 @@ def construct_blueprint_api(generator):
     command_service = CommandService()
     contacts_service = ContactsService()
 
-    @generator.response(
+    """@generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
     )
     @generator.request_body(
         {"message": "this is test message", "token": "test_token", "uuid": "test_uuid"}
-    )
+    )"""
+
     @api.route("/sendNotification", methods=["POST"])
     def send_notification():
         data = json.loads(request.get_data())
@@ -71,7 +72,7 @@ def construct_blueprint_api(generator):
         response.status_code = 200
         return response
 
-    @generator.response(
+    """@generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
     )
     @generator.request_body(
@@ -80,7 +81,8 @@ def construct_blueprint_api(generator):
             "token": "test_token",
             "uuid": "test_uuid",
         }
-    )
+    )"""
+
     @api.route("/uploadImage", methods=["POST"])
     def upload_image():
         data = json.loads(request.get_data())
@@ -99,7 +101,7 @@ def construct_blueprint_api(generator):
         response.status_code = 200
         return response
 
-    @generator.response(
+    """@generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
     )
     @generator.request_body(
@@ -109,7 +111,8 @@ def construct_blueprint_api(generator):
             "token": "test_token",
             "uuid": "test_uuid",
         }
-    )
+    )"""
+
     @api.route("/image_relatedness", methods=["POST"])
     def image_relatedness():
         data = json.loads(request.get_data())
@@ -155,16 +158,17 @@ def construct_blueprint_api(generator):
             os.getcwd() + "/src/static/", path=filename, as_attachment=False
         )
 
-    @generator.response(
+    """@generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
-    )
+    )"""
+
     @api.route("/training")
     def csv_training():
         csv_embed()
 
         return assembler.to_response(200, "trained successfully", "")
 
-    @generator.request_body(
+    """@generator.request_body(
         {
             "token": "test_token",
             "uuid": "test_uuid",
@@ -175,7 +179,8 @@ def construct_blueprint_api(generator):
     )
     @generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
-    )
+    )"""
+
     @api.route("/feedback", methods=["POST"])
     def add_feedback():
         try:
@@ -195,17 +200,19 @@ def construct_blueprint_api(generator):
             return assembler.to_response(400, "failed to add", "")
         return assembler.to_response(200, "added successfully", "")
 
-    @generator.response(
+    """@generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
-    )
+    )"""
+
     @api.route("/feedback/<string:search>/<int:rating>")
     def get_feedback(search, rating):
         result = feedback_service.get(search, rating)
         return assembler.to_response(200, "added successfully", json.dumps(result))
 
-    @generator.response(
+    """@generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
-    )
+    )"""
+
     @api.route("/commands")
     def get_commands():
         result = command_service.get()
@@ -215,7 +222,7 @@ def construct_blueprint_api(generator):
             json.dumps({"program": "help_command", "content": json.dumps(result)}),
         )
 
-    @generator.request_body(
+    """@generator.request_body(
         {
             "token": "test_token",
             "uuid": "test_uuid",
@@ -233,7 +240,8 @@ def construct_blueprint_api(generator):
                 "message": {"role": "assistant", "content": "content"},
             },
         },
-    )
+    )"""
+
     @api.route("/chat_rising", methods=["POST"])
     def message_agent():
         try:
@@ -269,7 +277,7 @@ def construct_blueprint_api(generator):
             ),
         )
 
-    @generator.request_body(
+    """@generator.request_body(
         {
             "token": "test_token",
             "uuid": "test_uuid",
@@ -282,7 +290,8 @@ def construct_blueprint_api(generator):
     )
     @generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
-    )
+    )"""
+
     @api.route("/send_sms", methods=["POST"])
     def send_sms():
         try:
@@ -299,7 +308,7 @@ def construct_blueprint_api(generator):
             return assembler.to_response(400, "Failed to send sms", "")
         return assembler.to_response(200, "Sent a sms successfully", twilio_resp.sid)
 
-    @generator.request_body(
+    """@generator.request_body(
         {
             "token": "String",
             "uuid": "String",
@@ -315,7 +324,8 @@ def construct_blueprint_api(generator):
     )
     @generator.response(
         status_code=200, schema={"message": "message", "result": "test_result"}
-    )
+    )"""
+
     @api.route("/train/contacts", methods=["POST"])
     def train_contacts():
         try:
