@@ -343,4 +343,30 @@ def construct_blueprint_api():
             return assembler.to_response(400, "Failed to train contacts", "")
         return assembler.to_response(200, "Trained successfully", "")
 
+    """@generator.request_body(
+        {
+            "token": "String",
+            "uuid": "String",
+        }
+    )
+    @generator.response(
+        status_code=200, schema={"message": "message", "result": "test_result"}
+    )"""
+
+    @api.route("/train/contacts/delete", methods=["POST"])
+    def delete_all_contacts():
+        try:
+            data = json.loads(request.get_data())
+            token = data["token"]
+            uuid = data["uuid"]
+
+            # parsing contacts
+            # train contact
+            contacts_service.delete_all(uuid)
+        except Exception as e:
+            return assembler.to_response(400, "Failed to delete contacts", "")
+        return assembler.to_response(
+            200, "Deleted all contacts from pinecone successfully", ""
+        )
+
     return api

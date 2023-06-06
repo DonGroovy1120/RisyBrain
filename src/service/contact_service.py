@@ -1,5 +1,5 @@
 """service to manage contacts"""
-from typing import List
+from typing import List, Any
 
 from rising_plugin.csv_embed import get_embed
 from rising_plugin.pinecone_engine import (
@@ -8,6 +8,7 @@ from rising_plugin.pinecone_engine import (
     init_pinecone,
     delete_pinecone,
     add_pinecone,
+    delete_all_pinecone,
 )
 
 from src.common.utils import PINECONE_INDEX_NAME
@@ -58,6 +59,11 @@ class ContactsService:
             for match_item in relatedness_data["matches"]:
                 result.append(match_item["id"])
         return result
+
+    """delete all items in the specific nanespace"""
+
+    def delete_all(self, uuid: str) -> Any:
+        return delete_all_pinecone(self.get_pinecone_index_namespace(uuid))
 
     """get pinecone namespace of pinecone"""
 
