@@ -100,4 +100,4 @@ win32-setctime==1.1.0
 wrapt==1.15.0
 yarl==1.8.2
 twilio==8.2.1
-rising-plugin==0.1.4
+rising-plugin==0.1.6
