@@ -8,21 +8,29 @@ All complex software including operating systems will need to be rewritten from 
 
 #### 1.1 Achievement
 <p align='center'>
-  <img align='center' src='assets/img/achievement.gif' width='250px' height='500px'/>
+  <img align='center' src='assets/img/desc.png' width='100%' />
 </p>
 
-#### 1.2 Architecture
-<p align='center'>
-  <img align='center' src='assets/img/langchain_architecture.jpg' width="30%"/>
-</p>
+- 📱 Support for mobile devices to manage all apps via plugin as its launcher.
+- 🌍 Support all web browsers to manipulate it automatically as its extension.
+- 🔗 Multiple API support (Web API for Free and Plus users, GPT-3.5, GPT-4, etc.).
+- 🔍 Integration to all mainstream search engines, and custom queries to support additional sites.
 
-- make app documentation and embed it.
-- embed the query that risingphone sends to local llm
-- calculate similarity between embedded app documentation and query and get the best similar app
-- get completion based on query and app data using langchain
-- send the result to risingphone using firebase clouding message
+[[Android Application](https://github.com/ttt246/RisingPhone)] [[Brrowser Extension](https://github.com/ttt246/Rising_Browser)] [[Rising Plugin](https://github.com/ttt246/Rising_Plugin)]
+#### 1.2 Feature
+
+- Chat with Rising AI as an assistant.
+- Search something from browser(which installed in your device) with user's input without any additional behaviour automatically. 
+- Search an image what you want for with its similar image or its description as user's prompt.
+- Search a contact automatically and guide a user to have a call or Sms when they want.
+- Manage contacts automatically and let a user going to any contact with its name or number. 
+- Manipulate all browsers with user's input(tab, page, search, scroll, or etc) and it will follow you to go on the real website or blog what you are thinking of.
 
 ## 2. Installing / Getting started
+Install the latest version of rising-plugin package to use / custom something on what you want. 
+```
+pip install rising-plugin
+```
 #### 2.1 how to run on local
 It's a standard flask application so no configuration is needed beyond the included Procfile
 #### 2.2 Create firebase project
